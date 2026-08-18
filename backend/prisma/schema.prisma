@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  credits   Int      @default(50) // Starting credits
+  bio       String?
+  role      String   @default("student") // student or admin
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  skillsProvided Skill[]       @relation("ProviderSkills")
+  sessionsLearnt Session[]     @relation("LearnerSessions")
+  sessionsTaught Session[]     @relation("TeacherSessions")
+  reviewsGiven   Review[]      @relation("Reviewer")
+  reviewsGotten  Review[]      @relation("Reviewee")
+  sentTxns       Transaction[] @relation("Sender")
+  receivedTxns   Transaction[] @relation("Receiver")
+}
+
+model Skill {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  category    String
+  providerId  String
+  createdAt   DateTime @default(now())
+
+  provider User      @relation("ProviderSkills", fields: [providerId], references: [id])
+  sessions Session[]
+}
+
+model Session {
+  id          String   @id @default(uuid())
+  status      String   @default("pending") // pending, accepted, completed, cancelled
+  learnerId   String
+  teacherId   String
+  skillId     String
+  cost        Int      @default(10)
+  scheduledAt DateTime
+  createdAt   DateTime @default(now())
+
+  learner User    @relation("LearnerSessions", fields: [learnerId], references: [id])
+  teacher User    @relation("TeacherSessions", fields: [teacherId], references: [id])
+  skill   Skill   @relation(fields: [skillId], references: [id])
+  reviews Review[]
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  rating     Int
+  comment    String?
+  reviewerId String
+  revieweeId String
+  sessionId  String
+  createdAt  DateTime @default(now())
+
+  reviewer User    @relation("Reviewer", fields: [reviewerId], references: [id])
+  reviewee User    @relation("Reviewee", fields: [revieweeId], references: [id])
+  session  Session @relation(fields: [sessionId], references: [id])
+}
+
+model Transaction {
+  id         String   @id @default(uuid())
+  amount     Int
+  type       String // session_payment, deposit, withdrawal
+  senderId   String?
+  receiverId String?
+  createdAt  DateTime @default(now())
+
+  sender   User? @relation("Sender", fields: [senderId], references: [id])
+  receiver User? @relation("Receiver", fields: [receiverId], references: [id])
+}
