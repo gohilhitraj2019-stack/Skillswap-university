@@ -9,7 +9,7 @@ export default function Marketplace() {
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/skills');
+        const res = await axios.get('http://localhost:5050/api/skills');
         setSkills(res.data);
       } catch (err) {
         console.error(err);
@@ -27,7 +27,7 @@ export default function Marketplace() {
     }
     
     try {
-      await axios.post('http://localhost:5000/api/sessions/book', {
+      await axios.post('http://localhost:5050/api/sessions/book', {
         skillId: skill.id,
         teacherId: skill.providerId,
         cost: 10,

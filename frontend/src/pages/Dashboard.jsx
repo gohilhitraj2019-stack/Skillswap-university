@@ -110,11 +110,11 @@ export default function Dashboard() {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       
       const [allSkillsRes, mySkillsRes, sessionsRes, bookedRes, profileRes] = await Promise.allSettled([
-        axios.get('http://localhost:5000/api/skills'),
-        axios.get('http://localhost:5000/api/user/skills', config),
-        axios.get('http://localhost:5000/api/user/sessions', config),
-        axios.get('http://localhost:5000/api/user/booked-skills', config),
-        axios.get('http://localhost:5000/api/user/profile', config)
+        axios.get('http://localhost:5050/api/skills'),
+        axios.get('http://localhost:5050/api/user/skills', config),
+        axios.get('http://localhost:5050/api/user/sessions', config),
+        axios.get('http://localhost:5050/api/user/booked-skills', config),
+        axios.get('http://localhost:5050/api/user/profile', config)
       ]);
 
       if (profileRes.status === 'rejected' && profileRes.reason?.response?.status === 401) {
@@ -158,7 +158,7 @@ export default function Dashboard() {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.put('http://localhost:5000/api/user/profile', profileForm, {
+      const res = await axios.put('http://localhost:5050/api/user/profile', profileForm, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -180,7 +180,7 @@ export default function Dashboard() {
     
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.post('http://localhost:5000/api/skills', skillFormData, {
+      const res = await axios.post('http://localhost:5050/api/skills', skillFormData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -211,7 +211,7 @@ export default function Dashboard() {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.put(`http://localhost:5000/api/skills/${editingSkill.id}`, skillFormData, {
+      const res = await axios.put(`http://localhost:5050/api/skills/${editingSkill.id}`, skillFormData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -231,7 +231,7 @@ export default function Dashboard() {
     if (!window.confirm('Are you sure you want to delete this skill?')) return;
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/skills/${id}`, {
+      await axios.delete(`http://localhost:5050/api/skills/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -247,7 +247,7 @@ export default function Dashboard() {
     if (!window.confirm('Cancel this session booking and refund credits?')) return;
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/sessions/${sessionId}`, {
+      await axios.delete(`http://localhost:5050/api/sessions/${sessionId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
