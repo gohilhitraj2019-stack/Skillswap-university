@@ -8,6 +8,7 @@ import Marketplace from './pages/Marketplace';
 function App() {
   const location = useLocation();
   const hideNavbar = ['/login', '/dashboard'].includes(location.pathname);
+  const isLoggedIn = Boolean(localStorage.getItem('token') && localStorage.getItem('user'));
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
@@ -23,12 +24,15 @@ function App() {
               </div>
               <div className="flex items-center space-x-4">
                 <Link to="/marketplace" className="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition-colors">Marketplace</Link>
-                <Link to="/dashboard" className="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium flex items-center gap-2 transition-colors">
-                  <LayoutDashboard className="h-4 w-4" /> Dashboard
-                </Link>
-                <Link to="/login" className="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-all shadow-md shadow-purple-600/20 hover:shadow-lg hover:shadow-purple-600/40">
-                  <LogIn className="h-4 w-4" /> Login
-                </Link>
+                {isLoggedIn ? (
+                  <Link to="/dashboard" className="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-all shadow-md shadow-purple-600/20 hover:shadow-lg hover:shadow-purple-600/40">
+                    <LayoutDashboard className="h-4 w-4" /> Back to Your Dashboard
+                  </Link>
+                ) : (
+                  <Link to="/login" className="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-all shadow-md shadow-purple-600/20 hover:shadow-lg hover:shadow-purple-600/40">
+                    <LogIn className="h-4 w-4" /> Login
+                  </Link>
+                )}
               </div>
             </div>
           </div>
