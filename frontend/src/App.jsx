@@ -37,12 +37,12 @@ function App() {
             </nav>
 
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="sm" asChild>
+              {/* <Button variant="ghost" size="sm" asChild>
                 <Link to="/marketplace" className="flex items-center gap-2">
                   <Compass className="h-4 w-4" />
-                  Explore
+                  Explore as
                 </Link>
-              </Button>
+              </Button> */}
               <Button size="sm" asChild>
                 <Link to="/login" className="flex items-center gap-2">
                   <LogIn className="h-4 w-4" />
