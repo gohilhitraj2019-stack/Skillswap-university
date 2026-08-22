@@ -147,7 +147,7 @@ export default function Dashboard() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    navigate('/login');
+    navigate('/');
   };
 
   // --- Profile CRUD: Edit Profile ---
@@ -188,6 +188,9 @@ export default function Dashboard() {
       setMySkills([res.data, ...mySkills]);
       setShowAddModal(false);
       setSkillFormData({ title: '', description: '', category: '' });
+      
+      // A newly shared skill is immediately available in the marketplace.
+      if (!isAdmin) navigate('/marketplace');
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to add skill');
     } finally {
@@ -372,6 +375,19 @@ export default function Dashboard() {
               {isAdmin ? <BookOpen className="h-5 w-5" /> : <BookMarked className="h-5 w-5" />}
               {isAdmin ? 'Skills' : 'My Booked Skills'}
             </button>
+
+            {!isAdmin && (
+              <button
+                onClick={() => {
+                  setSkillFormData({ title: '', description: '', category: '' });
+                  setShowAddModal(true);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold bg-purple-50 text-purple-700 hover:bg-purple-100 transition-all"
+              >
+                <PlusCircle className="h-5 w-5" />
+                Share a Skill
+              </button>
+            )}
           </nav>
         </div>
 
@@ -534,8 +550,23 @@ export default function Dashboard() {
                   <div className="text-3xl font-extrabold text-purple-600">{bookedSessions.length}</div>
                 </div>
                 <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs">
-                  <div className="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Your Offered Skills</div>
-                  <div className="text-3xl font-extrabold text-indigo-600">{mySkills.length}</div>
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Your Offered Skills</div>
+                      <div className="text-3xl font-extrabold text-indigo-600">{mySkills.length}</div>
+                    </div>
+                    {!isAdmin && (
+                      <button
+                        onClick={() => {
+                          setSkillFormData({ title: '', description: '', category: '' });
+                          setShowAddModal(true);
+                        }}
+                        className="text-xs font-bold text-purple-600 bg-purple-50 hover:bg-purple-100 px-2.5 py-1.5 rounded-xl transition-colors"
+                      >
+                        + Add Skill
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs">
                   <div className="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Available Marketplace Skills</div>
@@ -795,12 +826,23 @@ export default function Dashboard() {
                       <p className="text-slate-500">View and manage all skills you have booked for learning.</p>
                     </div>
 
-                    <Link
-                      to="/marketplace"
-                      className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-md shadow-purple-600/20 transition-all flex-shrink-0"
-                    >
-                      <Sparkles className="h-5 w-5" /> Browse Marketplace
-                    </Link>
+                    <div className="flex flex-wrap gap-3">
+                      <button
+                        onClick={() => {
+                          setSkillFormData({ title: '', description: '', category: '' });
+                          setShowAddModal(true);
+                        }}
+                        className="flex items-center gap-2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold px-4 py-2.5 rounded-xl transition-all"
+                      >
+                        <PlusCircle className="h-5 w-5" /> Share a Skill
+                      </button>
+                      <Link
+                        to="/marketplace"
+                        className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-md shadow-purple-600/20 transition-all flex-shrink-0"
+                      >
+                        <Sparkles className="h-5 w-5" /> Browse Marketplace
+                      </Link>
+                    </div>
                   </div>
 
                   {/* Search Bar for Booked Skills */}
@@ -955,8 +997,8 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* --- ADMIN ADD SKILL MODAL --- */}
-      {showAddModal && isAdmin && (
+      {/* --- ADD SKILL MODAL --- */}
+      {showAddModal && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl shadow-xl max-w-lg w-full p-6 relative animate-in fade-in zoom-in duration-200">
             <button 
@@ -966,7 +1008,8 @@ export default function Dashboard() {
               <X className="h-5 w-5" />
             </button>
 
-            <h3 className="text-2xl font-bold text-slate-900 mb-4">Add New Skill</h3>
+            <h3 className="text-2xl font-bold text-slate-900 mb-1">{isAdmin ? 'Add New Skill' : 'Share a Skill'}</h3>
+            {!isAdmin && <p className="text-xs text-slate-500 mb-4">Your skill will appear in the Marketplace as soon as you add it.</p>}
 
             <form onSubmit={handleCreateSkill} className="space-y-4">
               <div>
@@ -1017,7 +1060,7 @@ export default function Dashboard() {
                   disabled={submittingSkill}
                   className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold shadow-md shadow-purple-600/20 disabled:opacity-50"
                 >
-                  {submittingSkill ? 'Creating...' : 'Create Skill'}
+                  {submittingSkill ? 'Creating...' : (isAdmin ? 'Create Skill' : 'Add to Marketplace')}
                 </button>
               </div>
             </form>

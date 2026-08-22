@@ -10,6 +10,7 @@ import Marketplace from './pages/Marketplace';
 function App() {
   const location = useLocation();
   const hideNavbar = ['/login', '/dashboard'].includes(location.pathname);
+  const isLoggedIn = Boolean(localStorage.getItem('token') && localStorage.getItem('user'));
 
   return (
     <div className="min-h-screen bg-background text-foreground">
