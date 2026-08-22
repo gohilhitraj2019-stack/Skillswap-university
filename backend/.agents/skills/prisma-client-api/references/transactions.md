@@ -61,7 +61,7 @@ await prisma.$transaction(
     // operations
   },
   {
-    maxWait: 5000,    // Max wait to acquire lock (ms)
+    maxWait: 5050,    // Max wait to acquire lock (ms)
     timeout: 10000,   // Max transaction duration (ms)
     isolationLevel: 'Serializable'  // Isolation level
   }

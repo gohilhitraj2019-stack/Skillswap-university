@@ -1,5 +1,7 @@
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { BookOpen, LogIn, LayoutDashboard } from 'lucide-react';
+import { BookOpen, Compass, LogIn, Sparkles } from 'lucide-react';
+
+import { Button } from './components/ui/button';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -11,35 +13,48 @@ function App() {
   const isLoggedIn = Boolean(localStorage.getItem('token') && localStorage.getItem('user'));
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-background text-foreground">
       {!hideNavbar && (
-        <nav className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16 items-center">
-              <div className="flex-shrink-0 flex items-center">
-                <Link to="/" className="flex items-center gap-2 text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                  <BookOpen className="text-purple-600 h-8 w-8" />
-                  SkillSwap
+        <header className="sticky top-0 z-50 border-b border-border/80 bg-background/80 backdrop-blur-xl">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+            <Link to="/" className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-sm ring-1 ring-primary/20">
+                <BookOpen className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="text-lg font-semibold tracking-tight text-foreground">SkillSwap</div>
+                <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">University</div>
+              </div>
+            </Link>
+
+            <nav className="hidden items-center gap-2 md:flex">
+              <Link to="/marketplace" className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
+                Marketplace
+              </Link>
+              <Link to="/dashboard" className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground">
+                Dashboard
+              </Link>
+            </nav>
+
+            <div className="flex items-center gap-3">
+              {/* <Button variant="ghost" size="sm" asChild>
+                <Link to="/marketplace" className="flex items-center gap-2">
+                  <Compass className="h-4 w-4" />
+                  Explore as
                 </Link>
-              </div>
-              <div className="flex items-center space-x-4">
-                <Link to="/marketplace" className="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition-colors">Marketplace</Link>
-                {isLoggedIn ? (
-                  <Link to="/dashboard" className="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-all shadow-md shadow-purple-600/20 hover:shadow-lg hover:shadow-purple-600/40">
-                    <LayoutDashboard className="h-4 w-4" /> Back to Your Dashboard
-                  </Link>
-                ) : (
-                  <Link to="/login" className="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-all shadow-md shadow-purple-600/20 hover:shadow-lg hover:shadow-purple-600/40">
-                    <LogIn className="h-4 w-4" /> Login
-                  </Link>
-                )}
-              </div>
+              </Button> */}
+              <Button size="sm" asChild>
+                <Link to="/login" className="flex items-center gap-2">
+                  <LogIn className="h-4 w-4" />
+                  Login
+                </Link>
+              </Button>
             </div>
           </div>
-        </nav>
+        </header>
       )}
 
-      <main className="flex-grow">
+      <main className="flex-1">
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
@@ -47,14 +62,24 @@ function App() {
           <Route path="/marketplace" element={<Marketplace />} />
         </Routes>
       </main>
-      
+
       {!hideNavbar && (
-        <footer className="bg-white border-t border-slate-200 mt-auto py-8 text-center text-slate-500">
-          <p>&copy; {new Date().getFullYear()} SkillSwap University. All rights reserved.</p>
+        <footer className="border-t border-border bg-card/60">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:px-6 lg:px-8">
+            <div className="flex items-center gap-2 font-medium text-foreground">
+              <Sparkles className="h-4 w-4 text-primary" />
+              SkillSwap University
+            </div>
+            <div className="flex items-center gap-3">
+              <span>© {new Date().getFullYear()}</span>
+              <span className="hidden sm:inline">•</span>
+              <span>Built for peer learning</span>
+            </div>
+          </div>
         </footer>
       )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
